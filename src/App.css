@@ -1,6 +1,5 @@
 @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
 .App {
-  background-color: #9b3a3a;
   width: 100%;
   font-size: 12px;
 }
@@ -31,8 +30,26 @@ input.search-bar {
   position: relative;
   width: 100px;
   align-self: center;
+  visibility: hidden;
 }
-
+.level-wrapper {
+  display: flex;
+}
+.anchor {
+  position: relative;
+  left: 25px;
+  top: 3px;
+}
+.fas.fa-arrow-left {
+  color: #d6d6d6;
+  transition: all 0.2s ease-in-out;
+}
+.fas.fa-arrow-left:hover {
+  transform: scale(1.2);
+}
+.toggle {
+  visibility: visible;
+}
 .rc-slider-track {
   background-color: #73b100 !important;
 }
@@ -67,11 +84,11 @@ input.search-bar {
 .logo-img {
   width: 84px;
   height: 50px;
-  margin: 10px 0;
+  margin: 10px;
   position: relative;
   background-color: #73b100;
   border-radius: 10%;
-  margin: 0 20px;
+  margin: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,25 +131,27 @@ input.search-bar {
   width: 15px;
   margin-left: auto;
   margin-right: 20px;
+  transition: all 0.2s ease-in-out;
 }
-
-/* star-listing*/
+.circle-dot:hover {
+  transform: scale(1.1);
+}
 .rate {
   display: inline-block;
   border: 0;
   position: relative;
   left: -2px;
 }
-/* Hide radio */
+
 .rate > input {
   display: none;
 }
-/* Order correctly by floating highest to the right */
+
 .rate > label {
   float: right;
   color: #d6d6d6;
 }
-/* The star of the show */
+
 .rate > label:before {
   display: inline-block;
   padding: 5px 2px;
@@ -141,14 +160,7 @@ input.search-bar {
   font-family: FontAwesome;
   content: "\f005 "; /* full star */
 }
-/* Zero stars rating */
-.rate > label:last-child {
-  display: none;
-}
-.rate > label:last-child:before {
-  content: "\f006 "; /* empty star outline */
-}
-/* Half star trick */
+
 .rate .half:before {
   content: "\f089 "; /* half star no outline */
   position: absolute;
@@ -208,6 +220,19 @@ input.search-bar {
   font-size: 0.7em;
   text-anchor: middle;
 }
+.no-result {
+  color: #ffffff;
+  position: absolute;
+  left: 50%;
+  margin-left: -100px;
+  width: 200px;
+}
+@media (max-width: 767px) {
+  .level {
+    position: relative;
+    top: -10px;
+  }
+}
 
 @media (min-width: 527px) {
   .App {
@@ -252,6 +277,16 @@ input.search-bar {
   }
   .level-range {
     width: 220px;
+  }
+  .anchor {
+    width: 16px;
+    height: 16px;
+
+    top: -1px;
+  }
+  .anchor img {
+    width: 27px;
+    height: 27px;
   }
   .rc-slider-mark span {
     font-size: 15px;

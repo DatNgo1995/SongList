@@ -2,7 +2,14 @@ import React from "react";
 import Rating from "./Rating";
 import { Level } from "./Level";
 import circleDot from "../svg/circle-dot.svg";
-export const SongContent = ({ title, artist, rating, number, level, released }) => {
+export const SongContent = ({
+  title,
+  artist,
+  rating,
+  number,
+  level,
+  released
+}) => {
   return (
     <div className="list">
       <div className="left">

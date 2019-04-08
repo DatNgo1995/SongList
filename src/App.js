@@ -11,14 +11,20 @@ let count = 0;
 class App extends Component {
   state = {
     data: data,
-    hasMore: true,
-    initialLoad: true
+    dataTitleFilter: data,
+    dataLevelFilter: data,
+    noResult: false,
+    toggle: false,
+    wordFilter: "",
+    levelFilter: [0, 15]
   };
+  /* function to check if scroll to the end, then duplicate data*/
   handleScroll = () => {
     if (
       window.innerHeight + document.documentElement.scrollTop + 1 >=
       document.documentElement.offsetHeight
     ) {
+      this.assignStar();
       let newData = this.state.data;
       newData.push(data[count]);
       this.setState({ data: newData });
@@ -27,31 +33,44 @@ class App extends Component {
     }
   };
   componentDidMount() {
-    Array.from(document.querySelectorAll(".rate label")).forEach(e => {
-      e.onclick = this.onClick;
-    });
+    this.assignStar();
     window.addEventListener("scroll", this.handleScroll);
   }
-  onClick = e => {
+  /*change color of stars*/
+  assignStar = () =>
+    Array.from(document.querySelectorAll(".rate label")).forEach(e => {
+      e.onclick = this.starOnClick;
+    });
+  starOnClick = e => {
     Array.from(e.target.parentNode.children).forEach(f => {
       Number(f.htmlFor) <= Number(e.target.htmlFor)
         ? (f.style.color = "#73B100")
         : (f.style.color = "#D6D6D6");
     });
   };
+  /*filter by song name*/
   songSearch = e => {
-    let newData = data.filter(f => {
-      return f.title.toLowerCase().includes(e.target.value.toLowerCase());
-    });
-    this.setState({ data: newData });
+    this.setState({ wordFilter: e.target.value }, () => this.filterCallback());
   };
+  /*filter by level*/
   levelFilter = number => {
+    this.setState({ levelFilter: number }, () => this.filterCallback());
+  };
+  filterCallback = () => {
     let newData = data.filter(
-      f => Number(f.level) >= number[0] && Number(f.level) <= number[1]
+      f =>
+        f.title.toLowerCase().includes(this.state.wordFilter.toLowerCase()) &&
+        Number(f.level) >= this.state.levelFilter[0] &&
+        Number(f.level) <= this.state.levelFilter[1]
     );
     this.setState({ data: newData });
+    if (newData.length < 1) this.setState({ noResult: true });
+    else this.setState({ noResult: false });
   };
-
+  /*toggle the level filter bar*/
+  anchor = () => {
+    this.setState(prevState => ({ toggle: !prevState.toggle }));
+  };
   render() {
     return (
       <div className="App">
@@ -65,15 +84,22 @@ class App extends Component {
             />
             <i className="fas fa-search search-icon" />
           </div>
-          <div className="level-range">
-            <Range
-              min={0}
-              max={15}
-              defaultValue={[0, 15]}
-              allowCross={false}
-              marks={{ 0: 0, 15: 15 }}
-              onChange={this.levelFilter}
-            />
+          <div className="level-wrapper">
+            <div
+              className={`level-range ${this.state.toggle ? "toggle" : null}`}
+            >
+              <Range
+                min={0}
+                max={15}
+                defaultValue={[0, 15]}
+                allowCross={false}
+                marks={{ 0: 0, 15: 15 }}
+                onChange={this.levelFilter}
+              />
+            </div>
+            <div className="anchor" onClick={this.anchor}>
+              <i className="fas fa-arrow-left" />
+            </div>
           </div>
         </div>
         <div className="lists">
@@ -89,6 +115,9 @@ class App extends Component {
             />
           ))}
         </div>
+        {this.state.noResult ? (
+          <span className="no-result">No results found</span>
+        ) : null}
       </div>
     );
   }
